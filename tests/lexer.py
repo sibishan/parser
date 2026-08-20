@@ -1,0 +1,3 @@
+from lexer import LexicalAnalyser
+
+print(LexicalAnalyser.tokenise("  67 "))

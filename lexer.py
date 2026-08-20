@@ -60,9 +60,10 @@ class LexicalAnalyser:
             cur = classify(s[idx])
             nex = classify(s[idx + 1])
 
+            print(cur, nex)
+
             if cur == "GLYPH":
                 tokens.append(Glyph(f'{s[idx]}'))
-                cur = None
             elif cur == "SYMBOL":
                 if s[idx] == "(":
                     tokens.append(Symbol("("))
@@ -74,27 +75,23 @@ class LexicalAnalyser:
                     tokens.append(Symbol("."))
                 else:
                     raise TypeError(f"LEXER: {s[idx]} is an issue")
-                cur = None
-            elif cur == nex:
+            elif cur == nex or (cur == "LETTER" and nex == "DIGIT"):
                 buffer += s[idx]
             elif not cur == "SPACE" and nex == "SPACE":
                 if cur == "DIGIT":
                     buffer += s[idx]
                     tokens.append(Numeral(buffer))
                     buffer = ""
-                    cur = None
                 elif cur == "LETTER":
                     buffer += s[idx]
                     tokens.append(Variable(buffer))
                     buffer = ""
-                    cur = None
             elif cur == "SPACE" and not nex == "SPACE":
                 buffer += s[idx]
                 tokens.append(Space(len(buffer)))
                 buffer = ""
-                cur = None
             else:
-                raise TypeError(f"LEXER: {s[idx]} is an issue")
+                raise TypeError(f"x LEXER: {s[idx]} is an issue")
 
             idx += 1
 

@@ -17,7 +17,7 @@ def is_symbol(s):
 def classify(s):
     if s.isdigit():
         return "DIGIT"
-    elif 'a' <= s <= 'z':
+    elif 'a' <= s <= 'z' or s == "-":
         return "LETTER"
     elif s.isspace():
         return "SPACE"

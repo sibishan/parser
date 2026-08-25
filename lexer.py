@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
-from utils import classify
-
 @dataclass(frozen=True)
 class Numeral:
     value : str
@@ -50,9 +48,9 @@ SYMBOLS = {y.value for y in Symbol}
 
 class Lexer:
     @staticmethod
-    def tokenise(s):
+    def tokenise(s: str) -> list[Token]:
         if not isinstance(s, str):
-            raise TypeError("LEXER: Input is NOT a string!")
+            raise TypeError("LEXER: Input is NOT a string")
 
         tokens = []
         n = len(s)

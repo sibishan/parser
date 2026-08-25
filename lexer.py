@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
-from utils import classify, is_glyph
+from utils import classify
 
 @dataclass(frozen=True)
 class Numeral:
@@ -45,53 +45,53 @@ class Symbol(StrEnum):
 
 Token = Numeral | Variable | Space | Glyph | Symbol
 
-class LexicalAnalyser:
-    def tokenise(s):
-        tokens = []
-        buffer = ""
-        cur = None
+GLYPHS  = {g.value for g in Glyph}
+SYMBOLS = {y.value for y in Symbol}
 
+class Lexer:
+    @staticmethod
+    def tokenise(s):
         if not isinstance(s, str):
             raise TypeError("LEXER: Input is NOT a string!")
-        s += ";"
 
-        idx = 0
-        while idx < len(s) - 1:
-            cur = classify(s[idx])
-            nex = classify(s[idx + 1])
+        tokens = []
+        n = len(s)
+        i = 0
+        while i < n:
+            char = s[i]
+            if char in GLYPHS:
+                tokens.append(Glyph(char))
+                i += 1
 
-            if cur == "GLYPH":
-                tokens.append(Glyph(f'{s[idx]}'))
-            elif cur == "SYMBOL":
-                if s[idx] == "(":
-                    tokens.append(Symbol("("))
-                elif s[idx] == ")":
-                    tokens.append(Symbol(")"))
-                elif s[idx] == "λ":
-                    tokens.append(Symbol("λ"))
-                elif s[idx] == ".":
-                    tokens.append(Symbol("."))
-                else:
-                    raise TypeError(f"LEXER: {s[idx]} is an issue")
-            elif cur == nex or (cur == "LETTER" and nex == "DIGIT"):
-                buffer += s[idx]
-            elif not cur == "SPACE":
-                if cur == "DIGIT":
-                    buffer += s[idx]
-                    tokens.append(Numeral(buffer))
-                    buffer = ""
-                elif cur == "LETTER":
-                    buffer += s[idx]
-                    tokens.append(Variable(buffer))
-                    buffer = ""
-            elif cur == "SPACE" and not nex == "SPACE":
-                buffer += s[idx]
-                tokens.append(Space(len(buffer)))
-                buffer = ""
+            elif char in SYMBOLS:
+                tokens.append(Symbol(char))
+                i += 1
+
+            elif char == " ":
+                j = i
+                while j < n and s[j] == " ":
+                    j += 1
+                tokens.append(Space(j - i))
+                i = j
+
+            elif "0" <= char <= "9":
+                j = i
+                while j < n and ("0" <= s[j] <= "9"):
+                    j += 1
+                tokens.append(Numeral(s[i:j]))
+                i = j
+
+            elif "a" <= char <= "z":
+                j = i
+                while j < n and ("a" <= s[j] <= "z" or "0" <= s[j] <= "9" or s[j] == "-"):
+                    j += 1
+                tokens.append(Variable(s[i:j]))
+                i = j
+
+            elif char == "-":
+                raise ValueError(f"LEXER: Variable can NOT start with -")
+
             else:
-                raise TypeError(f"LEXER: {s[idx]} is an issue")
-
-            idx += 1
+                raise ValueError(f"LEXER: {char!r} is ILLEGAL character")
 
         return tokens
-            

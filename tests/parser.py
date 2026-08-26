@@ -1,4 +1,19 @@
-from parser import Parser, print_tree
+from contextlib import redirect_stderr
+from io import StringIO
 
-code, tree = Parser.parse("((x y) z)", versbose=True)
-print(print_tree(tree))
+from main import main
+
+
+def test(case, expected):
+    with redirect_stderr(StringIO()):
+        code = main(["main.py", case])
+
+    assert code == expected, (
+        f"FAILED {case!r}: GOT: {code}, EXPECTED: {expected}"
+    )
+
+    print(f"ok  {case!r} -> {code}")
+
+test("(sibi  r)", 0)
+test("(sibi  r)", 0)
+

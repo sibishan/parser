@@ -4,7 +4,7 @@ from parser import Parser, print_tree
 
 
 VALID = 0
-INVALID = -1
+INVALID = 1
 
 
 def main(argv: list[str]) -> int:
@@ -17,7 +17,7 @@ def main(argv: list[str]) -> int:
 
     if len(args) != 1:
         print(
-            f"usage: {argv[0]} [-v] \"<input>\"",
+            f"usage: python3 {argv[0]} [-v] \"<input>\"",
             file=sys.stderr
         )
         return INVALID

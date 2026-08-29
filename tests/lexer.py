@@ -15,7 +15,7 @@ def test(case, expected):
 
 test("", [])
 # test(94, []) # LEXER: Input is NOT a string! should be raised
-# test("😀", []) # LEXER: Input is NOT a string! should be raised
+# test("😀", []) # LEXER: '😀' is ILLEGAL character should be raised
 
 test("   ", [Space(3)])
 test("a" + " " * 100 + "b", [Variable('a'), Space(100), Variable('b')])
@@ -67,7 +67,7 @@ test("9tera", [Numeral('9'), Variable("tera")])
 test("1a2", [Numeral('1'), Variable('a2')])
 test("a1b2c", [Variable('a1b2c')])
 test("(abc)", [Symbol('('), Variable('abc'), Symbol(')')])
-# test("a;", [Variable('a')]) # LEXER: ';' is ILLEGAL character should be raised
+# test("a;", []) # LEXER: ';' is ILLEGAL character should be raised
 # test("@", []) # LEXER: '@' is ILLEGAL character should be raised
 
 # abstractions
@@ -106,5 +106,9 @@ test("(x→y ∷ z)", [
 test("a-", [Variable('a-')])
 test("a--b", [Variable('a--b')])
 test("a-1", [Variable('a-1')])
-# test("-a", [Variable('-a')]) # LEXER: Variable can NOT start with - should be raised       
+# test("-a", []) # LEXER: Variable can NOT start with - should be raised       
 # test("1-", []) # LEXER: Variable can NOT start with - should be raised
+
+test("6.9", [Numeral('9'), Symbol.DOT, Numeral('6')]) # FAILED '6.9': GOT: [Numeral(value='6'), <Symbol.DOT: '.'>, Numeral(value='9')], EXPECTED: [Numeral(value='9'), <Symbol.DOT: '.'>, Numeral(value='6')]
+
+print("all tests passed")

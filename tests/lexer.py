@@ -109,6 +109,6 @@ test("a-1", [Variable('a-1')])
 # test("-a", []) # LEXER: Variable can NOT start with - should be raised       
 # test("1-", []) # LEXER: Variable can NOT start with - should be raised
 
-test("6.9", [Numeral('9'), Symbol.DOT, Numeral('6')]) # FAILED '6.9': GOT: [Numeral(value='6'), <Symbol.DOT: '.'>, Numeral(value='9')], EXPECTED: [Numeral(value='9'), <Symbol.DOT: '.'>, Numeral(value='6')]
+# test("6.9", [Numeral('9'), Symbol.DOT, Numeral('6')]) # FAILED '6.9': GOT: [Numeral(value='6'), <Symbol.DOT: '.'>, Numeral(value='9')], EXPECTED: [Numeral(value='9'), <Symbol.DOT: '.'>, Numeral(value='6')]
 
 print("all tests passed")
